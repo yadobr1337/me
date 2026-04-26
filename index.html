@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Мой список просмотренного</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="space-bg" aria-hidden="true">
+      <div class="cosmic-gradient"></div>
+      <div class="cosmic-grid"></div>
+      <div class="star-layer star-layer-one"></div>
+      <div class="star-layer star-layer-two"></div>
+      <div class="particle-field" id="particleField"></div>
+      <div class="black-hole">
+        <div class="gravity-distortion"></div>
+        <div class="lens-ring"></div>
+        <div class="black-hole-core"></div>
+        <div class="gravity-ring gravity-ring-one"></div>
+        <div class="gravity-ring gravity-ring-two"></div>
+      </div>
+      <div class="ambient-orb ambient-orb-top"></div>
+      <div class="ambient-orb ambient-orb-side"></div>
+      <div class="vignette"></div>
+    </div>
+
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">
+          <svg class="mini-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3 9.8 8.8 4 11l5.8 2.2L12 19l2.2-5.8L20 11l-5.8-2.2L12 3Z" />
+            <path d="M19 3v4M21 5h-4M5 17v3M6.5 18.5h-3" />
+          </svg>
+          Личный архив
+        </p>
+        <h1 class="glitch-title" data-text="Просмотренное" aria-label="Просмотренное">
+          <span class="glitch-text">Просмотренное</span>
+          <span class="glitch-layer glitch-rgb-red" aria-hidden="true">Просмотренное</span>
+          <span class="glitch-layer glitch-rgb-blue" aria-hidden="true">Просмотренное</span>
+          <span class="glitch-layer glitch-slice glitch-slice-top" aria-hidden="true">Просмотренное</span>
+          <span class="glitch-layer glitch-slice glitch-slice-mid" aria-hidden="true">Просмотренное</span>
+          <span class="glitch-layer glitch-slice glitch-slice-bottom" aria-hidden="true">Просмотренное</span>
+        </h1>
+      </div>
+      <button class="icon-button add-button" id="openAdd" type="button" aria-label="Добавить">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+    </header>
+
+    <main class="shell">
+      <section class="controls" aria-label="Фильтры списка">
+        <label class="search-field">
+          <span>Поиск</span>
+          <div class="input-shell">
+            <svg class="field-icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input id="searchInput" type="search" placeholder="Название фильма, аниме или сериала" autocomplete="off" />
+          </div>
+        </label>
+
+        <div class="control-group">
+          <span>Тип</span>
+          <div class="segmented" id="typeFilter">
+            <button class="active" type="button" data-type="all">Все</button>
+            <button type="button" data-type="movie">Фильмы</button>
+            <button type="button" data-type="series">Сериалы</button>
+            <button type="button" data-type="anime">Аниме</button>
+          </div>
+        </div>
+
+        <div class="control-group sort-field">
+          <span>Сортировка</span>
+          <div class="sort-options" id="sortFilter">
+            <button class="active" type="button" data-sort="recent">Новые</button>
+            <button type="button" data-sort="rating">Рейтинг</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="list-head">
+          <h2>Список</h2>
+          <span id="countText">0 записей</span>
+        </div>
+        <div class="grid" id="watchGrid"></div>
+        <div class="empty-state" id="emptyState">
+          <h3>Список пока пустой</h3>
+          <p>Нажми плюс сверху справа, введи пароль и добавь первый тайтл.</p>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="modal" id="passwordModal">
+      <form class="modal-panel small" id="passwordForm">
+        <button class="close-button" id="closePassword" type="button" aria-label="Закрыть">×</button>
+        <div class="modal-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="10" width="14" height="10" rx="2" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
+        </div>
+        <h2>Пароль</h2>
+        <p>Введите пароль, чтобы открыть форму добавления.</p>
+        <input id="passwordInput" type="password" placeholder="Пароль" autocomplete="current-password" />
+        <p class="form-error" id="passwordError"></p>
+        <button class="primary-button" id="passwordSubmit" type="button">Открыть</button>
+      </form>
+    </dialog>
+
+    <dialog class="modal" id="editorModal">
+      <form class="modal-panel editor" id="addForm">
+        <button class="close-button" id="closeEditor" type="button" aria-label="Закрыть">×</button>
+        <div class="form-heading">
+          <div>
+            <p class="eyebrow">Новая запись</p>
+            <h2>Добавить в список</h2>
+          </div>
+        </div>
+
+        <label>
+          <span>Название</span>
+          <input id="titleInput" type="text" placeholder="Например: Наруто" required autocomplete="off" />
+        </label>
+
+        <label>
+          <span>Рейтинг: <strong id="ratingValue">8</strong>/10</span>
+          <input id="ratingInput" type="range" min="1" max="10" step="1" value="8" />
+        </label>
+
+        <label>
+          <span>Тип</span>
+          <select id="categoryInput">
+            <option value="movie">Фильм</option>
+            <option value="series">Сериал</option>
+            <option value="anime">Аниме</option>
+          </select>
+        </label>
+
+        <div class="image-tools">
+          <div>
+            <span class="field-title">Обложка</span>
+            <p>Введите название и нажмите поиск. Будут показаны 3 изображения из Яндекс Картинок.</p>
+          </div>
+          <button class="secondary-button" id="loadImages" type="button">Найти фото</button>
+        </div>
+
+        <div class="image-grid" id="imageResults" aria-live="polite"></div>
+
+        <label>
+          <span>Своя ссылка на фото</span>
+          <input id="manualImage" type="url" placeholder="https://..." autocomplete="off" />
+        </label>
+
+        <button class="primary-button" type="submit">Сохранить</button>
+
+        <div class="delete-box">
+          <h3>Удалить из списка</h3>
+          <div class="delete-row">
+            <input id="deleteSearch" type="search" placeholder="Найти по названию" autocomplete="off" />
+            <button class="danger-button" id="deleteButton" type="button" disabled>Удалить</button>
+          </div>
+          <div class="delete-results" id="deleteResults"></div>
+          <p id="deleteHint">Начните вводить название записи.</p>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
