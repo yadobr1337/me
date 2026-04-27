@@ -1,4 +1,5 @@
 const STORAGE_KEY = "watched-list-v1";
+const API_URL = "/api/items";
 const PASSWORD = "101112";
 const typeNames = {
   movie: "Фильм",
@@ -19,6 +20,8 @@ let deleteTargetId = null;
 let posterLoadRunId = 0;
 let posterObserver = null;
 let pageIsLoaded = document.readyState === "complete";
+let remoteSyncEnabled = false;
+let remoteSaveTimer = null;
 
 const grid = document.querySelector("#watchGrid");
 const emptyState = document.querySelector("#emptyState");
@@ -147,6 +150,7 @@ deleteButton.addEventListener("click", () => {
 });
 
 render();
+syncItemsFromServer();
 
 function unlockEditor() {
   if (passwordInput.value !== PASSWORD) {
@@ -338,8 +342,10 @@ function loadItems() {
   }
 }
 
-function saveItems() {
+function saveItems(options = {}) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  if (options.skipRemote) return;
+  scheduleRemoteSave();
 }
 
 function createFallbackPoster(title) {
@@ -521,6 +527,76 @@ function loadPosterImage(poster) {
 
 function getItemStatus(item) {
   return item.status === "planned" ? "planned" : "watched";
+}
+
+async function syncItemsFromServer() {
+  try {
+    const response = await fetch(API_URL, { cache: "no-store" });
+    if (!response.ok) throw new Error("Remote list is unavailable");
+
+    remoteSyncEnabled = true;
+    const remoteItems = normalizeItems(await response.json());
+    const mergedItems = mergeItems(remoteItems, items);
+    const shouldUploadLocalItems = mergedItems.length !== remoteItems.length;
+
+    items = mergedItems;
+    saveItems({ skipRemote: true });
+    render();
+
+    if (shouldUploadLocalItems) scheduleRemoteSave();
+  } catch {
+    remoteSyncEnabled = false;
+  }
+}
+
+function scheduleRemoteSave() {
+  if (!remoteSyncEnabled) return;
+  clearTimeout(remoteSaveTimer);
+  remoteSaveTimer = setTimeout(saveItemsToServer, 350);
+}
+
+async function saveItemsToServer() {
+  if (!remoteSyncEnabled) return;
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Admin-Password": PASSWORD,
+      },
+      body: JSON.stringify({ items }),
+    });
+
+    if (!response.ok) throw new Error("Remote save failed");
+  } catch {
+    remoteSyncEnabled = false;
+  }
+}
+
+function normalizeItems(value) {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .filter((item) => item && typeof item.title === "string" && item.title.trim())
+    .map((item) => ({
+      id: item.id || createId(),
+      title: item.title.trim(),
+      rating: Number.isInteger(Number(item.rating)) ? Math.min(10, Math.max(1, Number(item.rating))) : 8,
+      type: typeNames[item.type] ? item.type : "movie",
+      status: getItemStatus(item),
+      poster: typeof item.poster === "string" && item.poster ? item.poster : createFallbackPoster(item.title),
+      createdAt: Number(item.createdAt) || Date.now(),
+    }));
+}
+
+function mergeItems(remoteItems, localItems) {
+  const merged = new Map();
+  normalizeItems(remoteItems).forEach((item) => merged.set(item.id, item));
+  normalizeItems(localItems).forEach((item) => {
+    if (!merged.has(item.id)) merged.set(item.id, item);
+  });
+  return [...merged.values()].sort((a, b) => b.createdAt - a.createdAt);
 }
 
 function escapeSvg(value) {
