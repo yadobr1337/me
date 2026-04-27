@@ -520,6 +520,13 @@ h2 {
   padding: 0 20px 58px;
 }
 
+.mobile-filter-button,
+.filter-backdrop,
+.filter-sheet-handle,
+.filter-sheet-head {
+  display: none;
+}
+
 .controls {
   position: relative;
   z-index: 30;
@@ -1799,6 +1806,10 @@ input[type="range"] {
 }
 
 @media (max-width: 560px) {
+  body.filter-sheet-open {
+    overflow: hidden;
+  }
+
   body::before {
     animation: none;
   }
@@ -1956,6 +1967,129 @@ input[type="range"] {
 
   .shell {
     padding: 0 14px 96px;
+  }
+
+  .mobile-filter-button {
+    position: relative;
+    z-index: 25;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 50px;
+    margin: 0 0 18px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 18px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.07);
+    font-weight: 900;
+    box-shadow:
+      0 20px 58px rgba(0, 0, 0, 0.54),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(18px);
+  }
+
+  .mobile-filter-button:active {
+    transform: scale(0.98);
+  }
+
+  .filter-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9997;
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(5px);
+    transition: opacity 180ms ease;
+  }
+
+  body.filter-sheet-open .filter-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9998;
+    display: grid;
+    grid-template-columns: 1fr;
+    max-height: min(82vh, 620px);
+    margin: 0;
+    padding: 10px 16px max(18px, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    border-width: 1px 0 0;
+    border-radius: 32px 32px 0 0;
+    background: rgba(9, 9, 11, 0.98);
+    box-shadow: 0 -30px 90px rgba(0, 0, 0, 0.86);
+    transform: translateY(104%);
+    transition: transform 360ms cubic-bezier(0.2, 0.9, 0.22, 1);
+  }
+
+  .controls.open {
+    transform: translateY(0);
+  }
+
+  .filter-sheet-handle {
+    display: block;
+    width: 48px;
+    height: 4px;
+    margin: 0 auto 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .filter-sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+
+  .filter-sheet-head h2 {
+    font-size: 26px;
+    font-weight: 900;
+  }
+
+  .filter-close-button {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .filter-close-button:active {
+    transform: scale(0.96);
+  }
+
+  .dropdown-menu {
+    position: static;
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+
+  .filter-dropdown.open .dropdown-menu {
+    max-height: 260px;
+    margin-top: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-width: 1px;
+    transform: translateY(0) scale(1);
   }
 
   .grid {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ProsmotriByDobr1</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260427-blackhole" />
-    <link rel="stylesheet" href="styles.css?v=20260427-cosmictitle" />
+    <link rel="stylesheet" href="styles.css?v=20260427-bottomsheetfilters" />
   </head>
   <body>
     <div class="space-bg" aria-hidden="true">
@@ -70,7 +70,26 @@
     </header>
 
     <main class="shell">
-      <section class="controls" aria-label="Фильтры списка">
+      <button class="mobile-filter-button" id="openFilters" type="button" aria-expanded="false" aria-controls="filtersPanel">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 6h16M7 12h10M10 18h4" />
+        </svg>
+        <span>Фильтры</span>
+      </button>
+
+      <div class="filter-backdrop" id="filterBackdrop" aria-hidden="true"></div>
+
+      <section class="controls" id="filtersPanel" aria-label="Фильтры списка">
+        <div class="filter-sheet-handle" aria-hidden="true"></div>
+        <div class="filter-sheet-head">
+          <h2>Фильтры</h2>
+          <button class="filter-close-button" id="closeFilters" type="button" aria-label="Закрыть фильтры">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
         <label class="search-field">
           <span>Поиск</span>
           <div class="input-shell">
@@ -229,6 +248,6 @@
       </form>
     </dialog>
 
-    <script src="app.js?v=20260427-dropdownfilters"></script>
+    <script src="app.js?v=20260427-bottomsheetfilters"></script>
   </body>
 </html>

@@ -34,6 +34,10 @@ const searchInput = document.querySelector("#searchInput");
 const sortFilter = document.querySelector("#sortFilter");
 const typeFilter = document.querySelector("#typeFilter");
 const statusFilter = document.querySelector("#statusFilter");
+const filtersPanel = document.querySelector("#filtersPanel");
+const openFiltersButton = document.querySelector("#openFilters");
+const closeFiltersButton = document.querySelector("#closeFilters");
+const filterBackdrop = document.querySelector("#filterBackdrop");
 const passwordModal = document.querySelector("#passwordModal");
 const editorModal = document.querySelector("#editorModal");
 const passwordInput = document.querySelector("#passwordInput");
@@ -101,8 +105,18 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeAllDropdowns();
+  if (event.key !== "Escape") return;
+  if (document.body.classList.contains("filter-sheet-open")) {
+    setFilterSheetOpen(false);
+    return;
+  }
+
+  closeAllDropdowns();
 });
+
+openFiltersButton.addEventListener("click", () => setFilterSheetOpen(true));
+closeFiltersButton.addEventListener("click", () => setFilterSheetOpen(false));
+filterBackdrop.addEventListener("click", () => setFilterSheetOpen(false));
 
 ratingInput.addEventListener("input", () => {
   ratingValue.textContent = ratingInput.value;
@@ -250,6 +264,13 @@ function setDropdownOpen(dropdown, open) {
 
 function closeAllDropdowns() {
   document.querySelectorAll(".filter-dropdown.open").forEach((dropdown) => setDropdownOpen(dropdown, false));
+}
+
+function setFilterSheetOpen(open) {
+  document.body.classList.toggle("filter-sheet-open", open);
+  filtersPanel.classList.toggle("open", open);
+  openFiltersButton.setAttribute("aria-expanded", String(open));
+  if (!open) closeAllDropdowns();
 }
 
 async function loadImageChoices() {
