@@ -12,10 +12,13 @@ const statusNames = {
 
 let items = loadItems();
 let currentType = "all";
-let currentStatus = "all";
+let currentStatus = "watched";
 let sortMode = "recent";
 let selectedImage = "";
 let deleteTargetId = null;
+let posterLoadRunId = 0;
+let posterObserver = null;
+let pageIsLoaded = document.readyState === "complete";
 
 const grid = document.querySelector("#watchGrid");
 const emptyState = document.querySelector("#emptyState");
@@ -42,6 +45,14 @@ const deleteHint = document.querySelector("#deleteHint");
 const deleteResults = document.querySelector("#deleteResults");
 
 scheduleBackgroundEffects();
+
+window.addEventListener(
+  "load",
+  () => {
+    pageIsLoaded = true;
+  },
+  { once: true },
+);
 
 document.querySelector("#openAdd").addEventListener("click", () => {
   passwordInput.value = "";
@@ -167,10 +178,11 @@ function render() {
       const typeIcon = item.type === "movie" ? "film" : "tv";
       const viewName = createViewName(item.id);
       const status = getItemStatus(item);
+      const placeholder = createPosterPlaceholder(item.title);
       return `
         <a class="card ${isTopRated ? "top-rated" : ""}" href="${searchUrl}" target="_blank" rel="noopener noreferrer" style="--delay: ${index * 45}ms; view-transition-name: ${viewName}" aria-label="Открыть поиск Яндекса: ${escapeAttribute(item.title)}">
           <div class="poster-wrap">
-            <img class="poster" src="${escapeAttribute(item.poster)}" alt="${escapeAttribute(item.title)}" loading="lazy" decoding="async" />
+            <img class="poster" src="${escapeAttribute(placeholder)}" data-src="${escapeAttribute(item.poster)}" alt="${escapeAttribute(item.title)}" loading="lazy" decoding="async" />
             <span class="poster-overlay"></span>
             <span class="poster-type">${typeNames[item.type]}</span>
             <span class="poster-status">${statusNames[status]}</span>
@@ -190,6 +202,7 @@ function render() {
 
   emptyState.classList.toggle("visible", sorted.length === 0);
   countText.textContent = getCountText(sorted.length);
+  schedulePosterLoading();
 }
 
 function smoothRender() {
@@ -250,7 +263,11 @@ async function loadImageChoices() {
 async function searchYandexImages(query) {
   const yandexUrl = `https://yandex.ru/images/search?text=${encodeURIComponent(query)}`;
   const proxyUrl = `https://r.jina.ai/http://${yandexUrl}`;
-  const response = await fetch(proxyUrl);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8500);
+
+  const response = await fetch(proxyUrl, { signal: controller.signal });
+  clearTimeout(timeout);
   if (!response.ok) throw new Error("Image search failed");
 
   const markdown = await response.text();
@@ -338,6 +355,19 @@ function createFallbackPoster(title) {
   return `https://placehold.co/600x800/121826/f8fafc?text=${safeTitle}`;
 }
 
+function createPosterPlaceholder(title) {
+  const shortTitle = String(title).slice(0, 22);
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+      <rect width="600" height="800" fill="#070707"/>
+      <circle cx="300" cy="305" r="122" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3"/>
+      <path d="M90 505h420" stroke="rgba(255,255,255,.16)" stroke-width="3"/>
+      <text x="300" y="570" fill="rgba(255,255,255,.72)" font-family="Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">${escapeSvg(shortTitle)}</text>
+    </svg>
+  `;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
 function createId() {
   if (crypto.randomUUID) return crypto.randomUUID();
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -410,8 +440,102 @@ function scheduleBackgroundEffects() {
   });
 }
 
+function schedulePosterLoading() {
+  const runId = ++posterLoadRunId;
+  const load = () => observePosterImages(runId);
+  const delay = pageIsLoaded ? 260 : 1100;
+
+  const schedule = () => {
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(load, { timeout: 1200 });
+      return;
+    }
+
+    setTimeout(load, 120);
+  };
+
+  if (pageIsLoaded) {
+    setTimeout(schedule, delay);
+    return;
+  }
+
+  window.addEventListener(
+    "load",
+    () => {
+      pageIsLoaded = true;
+      setTimeout(schedule, delay);
+    },
+    { once: true },
+  );
+}
+
+function observePosterImages(runId) {
+  if (runId !== posterLoadRunId) return;
+  if (posterObserver) posterObserver.disconnect();
+
+  const posters = [...document.querySelectorAll(".poster[data-src]")];
+  if (posters.length === 0) return;
+
+  if (!("IntersectionObserver" in window)) {
+    posters.slice(0, 4).forEach(loadPosterImage);
+    return;
+  }
+
+  posterObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        posterObserver.unobserve(entry.target);
+        loadPosterImage(entry.target);
+      });
+    },
+    { rootMargin: "180px 0px", threshold: 0.01 },
+  );
+
+  posters.forEach((poster) => posterObserver.observe(poster));
+}
+
+function loadPosterImage(poster) {
+  const url = poster.dataset.src;
+  if (!url || poster.dataset.loading === "true") return;
+  poster.dataset.loading = "true";
+
+  const image = new Image();
+  const timeout = setTimeout(() => {
+    image.onload = null;
+    image.onerror = null;
+    image.src = "";
+    poster.removeAttribute("data-src");
+    poster.removeAttribute("data-loading");
+  }, 5000);
+
+  image.onload = () => {
+    clearTimeout(timeout);
+    poster.src = url;
+    poster.removeAttribute("data-src");
+    poster.removeAttribute("data-loading");
+  };
+
+  image.onerror = () => {
+    clearTimeout(timeout);
+    poster.removeAttribute("data-src");
+    poster.removeAttribute("data-loading");
+  };
+
+  image.decoding = "async";
+  image.fetchPriority = "low";
+  image.src = url;
+}
+
 function getItemStatus(item) {
   return item.status === "planned" ? "planned" : "watched";
+}
+
+function escapeSvg(value) {
+  return String(value).replace(/[&<>"']/g, (char) => {
+    const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" };
+    return map[char];
+  });
 }
 
 function iconSvg(name, size = 22, className = "") {

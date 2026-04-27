@@ -318,6 +318,8 @@ button {
 .shell {
   position: relative;
   z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .topbar {
@@ -325,9 +327,11 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  max-width: 1180px;
-  margin: 0 auto;
   padding: 56px 20px 28px;
+}
+
+.topbar > div {
+  min-width: 0;
 }
 
 .eyebrow {
@@ -454,14 +458,12 @@ h2 {
 }
 
 .shell {
-  max-width: 1180px;
-  margin: 0 auto;
   padding: 0 20px 58px;
 }
 
 .controls {
   display: grid;
-  grid-template-columns: minmax(260px, 1.45fr) minmax(310px, 1.05fr) minmax(210px, 0.75fr) minmax(260px, 0.95fr);
+  grid-template-columns: minmax(250px, 1fr) minmax(340px, 0.95fr) minmax(190px, 0.55fr) minmax(280px, 0.75fr);
   gap: 16px;
   align-items: end;
   margin-bottom: 32px;
@@ -620,7 +622,7 @@ input[type="range"] {
 }
 
 .segmented {
-  grid-template-columns: repeat(4, minmax(82px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .sort-options {
@@ -628,7 +630,7 @@ input[type="range"] {
 }
 
 .status-options {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .segmented button,
@@ -640,6 +642,8 @@ input[type="range"] {
   color: #8f8f8f;
   background: transparent;
   font-weight: 900;
+  padding: 0 12px;
+  white-space: nowrap;
   transition: color 170ms ease, background 170ms ease, transform 170ms ease;
 }
 
@@ -768,6 +772,11 @@ input[type="range"] {
   filter: grayscale(1) contrast(1.06);
   background: #111;
   transition: transform 700ms ease, filter 700ms ease, opacity 700ms ease;
+}
+
+.poster[data-src] {
+  opacity: 0.38;
+  filter: grayscale(1) contrast(0.92);
 }
 
 .poster-wrap {
@@ -1615,12 +1624,18 @@ input[type="range"] {
   }
 
   .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 56px;
+    align-items: start;
+    gap: 12px;
     padding-top: 26px;
     padding-bottom: 22px;
   }
 
   .glitch-title {
-    font-size: 42px;
+    max-width: 100%;
+    font-size: clamp(34px, 14vw, 42px);
+    letter-spacing: -0.04em;
   }
 
   .black-hole {
