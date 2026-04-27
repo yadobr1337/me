@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
+      <stop offset="34%" stop-color="#f2dfcd" stop-opacity="0.78"/>
+      <stop offset="58%" stop-color="#a78670" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="disk" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="18%" stop-color="#cbb39d" stop-opacity="0.42"/>
+      <stop offset="44%" stop-color="#ffffff" stop-opacity="0.96"/>
+      <stop offset="56%" stop-color="#ffffff" stop-opacity="0.94"/>
+      <stop offset="82%" stop-color="#cbb39d" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="1.4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="#030303"/>
+  <circle cx="32" cy="32" r="29" fill="#050505"/>
+  <ellipse cx="32" cy="32" rx="25" ry="20" fill="none" stroke="url(#halo)" stroke-width="4" opacity="0.9" filter="url(#softGlow)"/>
+  <ellipse cx="32" cy="32" rx="32" ry="7" fill="url(#disk)" opacity="0.96" transform="rotate(-11 32 32)" filter="url(#softGlow)"/>
+  <circle cx="32" cy="32" r="13" fill="#000000"/>
+  <circle cx="32" cy="32" r="14.5" fill="none" stroke="#f1dfcf" stroke-opacity="0.28" stroke-width="1.2"/>
+  <path d="M17 29c9-5 21-5 30 0" fill="none" stroke="#fff" stroke-opacity="0.2" stroke-width="1.4" stroke-linecap="round"/>
+</svg>
