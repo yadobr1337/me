@@ -206,15 +206,7 @@ function render() {
 }
 
 function smoothRender() {
-  const shouldSkipTransition = window.matchMedia("(max-width: 560px)").matches || items.length > 30;
-  if (!document.startViewTransition || shouldSkipTransition) {
-    render();
-    return;
-  }
-
-  document.startViewTransition(() => {
-    render();
-  });
+  render();
 }
 
 async function loadImageChoices() {
