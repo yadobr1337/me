@@ -428,6 +428,61 @@ p {
   animation-delay: 180ms;
 }
 
+.cosmic-title {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(58px, 8vw, 96px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  text-shadow:
+    0 0 18px rgba(255, 255, 255, 0.14),
+    0 28px 84px rgba(255, 255, 255, 0.12);
+}
+
+.cosmic-title-text {
+  position: relative;
+  z-index: 3;
+  grid-area: 1 / 1;
+  animation: cosmicTitlePulse 3s ease-in-out infinite;
+}
+
+.cosmic-title-glow {
+  position: absolute;
+  inset: -18% -8%;
+  z-index: 1;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.32), rgba(111, 177, 255, 0.42), transparent 76%);
+  filter: blur(28px);
+  opacity: 0.26;
+  mix-blend-mode: screen;
+  animation: cosmicTitleGlow 6s ease-in-out infinite alternate;
+}
+
+.cosmic-title-particles {
+  position: absolute;
+  inset: -22% -4% -18%;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cosmic-title-particles span {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.86);
+  opacity: 0;
+  animation: cosmicTitleParticle var(--duration) ease-in-out var(--delay) infinite;
+}
+
 h2 {
   margin-bottom: 0;
   color: #fff;
@@ -1462,6 +1517,51 @@ input[type="range"] {
   }
 }
 
+@keyframes cosmicTitlePulse {
+  0%,
+  100% {
+    opacity: 0.42;
+    filter: brightness(0.88);
+  }
+
+  50% {
+    opacity: 1;
+    filter: brightness(1.22);
+  }
+}
+
+@keyframes cosmicTitleGlow {
+  0% {
+    opacity: 0.18;
+    transform: translate3d(0, -30px, 0) scaleX(0.92);
+  }
+
+  50% {
+    opacity: 0.58;
+  }
+
+  100% {
+    opacity: 0.24;
+    transform: translate3d(0, 30px, 0) scaleX(1.08);
+  }
+}
+
+@keyframes cosmicTitleParticle {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.75);
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--shift-x), var(--end-y), 0) scale(1.35);
+  }
+}
+
 @keyframes introSlide {
   from {
     opacity: 0;
@@ -1614,7 +1714,8 @@ input[type="range"] {
     align-items: flex-start;
   }
 
-  .glitch-title {
+  .glitch-title,
+  .cosmic-title {
     font-size: 56px;
   }
 
@@ -1726,10 +1827,20 @@ input[type="range"] {
     padding-bottom: 22px;
   }
 
-  .glitch-title {
+  .glitch-title,
+  .cosmic-title {
     max-width: 100%;
     font-size: clamp(34px, 14vw, 42px);
     letter-spacing: -0.04em;
+  }
+
+  .cosmic-title-glow {
+    inset: -24% -10%;
+    filter: blur(20px);
+  }
+
+  .cosmic-title-particles {
+    inset: -28% -6% -20%;
   }
 
   .add-button {
