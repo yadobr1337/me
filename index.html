@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ProsmotriByDobr1</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260427-blackhole" />
-    <link rel="stylesheet" href="styles.css?v=20260427-mobilehole" />
+    <link rel="stylesheet" href="styles.css?v=20260427-dropdownfilters" />
   </head>
   <body>
     <div class="space-bg" aria-hidden="true">
@@ -66,27 +66,51 @@
 
         <div class="control-group type-field">
           <span>Тип</span>
-          <div class="segmented" id="typeFilter">
-            <button class="active" type="button" data-type="all">Все</button>
-            <button type="button" data-type="movie">Фильмы</button>
-            <button type="button" data-type="series">Сериалы</button>
-            <button type="button" data-type="anime">Аниме</button>
+          <div class="filter-dropdown" id="typeFilter">
+            <button class="dropdown-trigger" type="button" aria-expanded="false">
+              <span class="dropdown-value">Все</span>
+              <svg class="dropdown-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <button class="active" type="button" data-type="all">Все <svg class="dropdown-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button>
+              <button type="button" data-type="movie">Фильмы <svg class="dropdown-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button>
+              <button type="button" data-type="series">Сериалы <svg class="dropdown-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button>
+              <button type="button" data-type="anime">Аниме <svg class="dropdown-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button>
+            </div>
           </div>
         </div>
 
         <div class="control-group sort-field">
           <span>Сортировка</span>
-          <div class="sort-options" id="sortFilter">
-            <button class="active" type="button" data-sort="recent">Новые</button>
-            <button type="button" data-sort="rating">Рейтинг</button>
+          <div class="filter-dropdown" id="sortFilter">
+            <button class="dropdown-trigger" type="button" aria-expanded="false">
+              <span class="dropdown-value">Новые</span>
+              <svg class="dropdown-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <button class="active" type="button" data-sort="recent">Новые <svg class="dropdown-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button>
+              <button type="button" data-sort="rating">Рейтинг <svg class="dropdown-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button>
+            </div>
           </div>
         </div>
 
         <div class="control-group status-field">
           <span>Статус</span>
-          <div class="status-options" id="statusFilter">
-            <button class="active" type="button" data-status="watched">Просмотрено</button>
-            <button type="button" data-status="planned">Запланировано</button>
+          <div class="filter-dropdown" id="statusFilter">
+            <button class="dropdown-trigger" type="button" aria-expanded="false">
+              <span class="dropdown-value">Просмотрено</span>
+              <svg class="dropdown-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <button class="active" type="button" data-status="watched">Просмотрено <svg class="dropdown-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button>
+              <button type="button" data-status="planned">Запланировано <svg class="dropdown-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button>
+            </div>
           </div>
         </div>
       </section>
@@ -187,6 +211,6 @@
       </form>
     </dialog>
 
-    <script src="app.js?v=20260427-servertruth"></script>
+    <script src="app.js?v=20260427-dropdownfilters"></script>
   </body>
 </html>

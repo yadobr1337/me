@@ -83,28 +83,25 @@ document.querySelector("#closeEditor").addEventListener("click", () => editorMod
 
 searchInput.addEventListener("input", render);
 
-sortFilter.addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-sort]");
-  if (!button) return;
-  sortMode = button.dataset.sort;
-  sortFilter.querySelectorAll("button").forEach((item) => item.classList.toggle("active", item === button));
-  smoothRender();
+setupFilterDropdown(typeFilter, "type", (value) => {
+  currentType = value;
 });
 
-typeFilter.addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-type]");
-  if (!button) return;
-  currentType = button.dataset.type;
-  typeFilter.querySelectorAll("button").forEach((item) => item.classList.toggle("active", item === button));
-  smoothRender();
+setupFilterDropdown(sortFilter, "sort", (value) => {
+  sortMode = value;
 });
 
-statusFilter.addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-status]");
-  if (!button) return;
-  currentStatus = button.dataset.status;
-  statusFilter.querySelectorAll("button").forEach((item) => item.classList.toggle("active", item === button));
-  smoothRender();
+setupFilterDropdown(statusFilter, "status", (value) => {
+  currentStatus = value;
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".filter-dropdown")) return;
+  closeAllDropdowns();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeAllDropdowns();
 });
 
 ratingInput.addEventListener("input", () => {
@@ -218,6 +215,41 @@ function render() {
 
 function smoothRender() {
   render();
+}
+
+function setupFilterDropdown(dropdown, dataName, onChange) {
+  const trigger = dropdown.querySelector(".dropdown-trigger");
+  const valueText = dropdown.querySelector(".dropdown-value");
+  const optionSelector = `button[data-${dataName}]`;
+
+  trigger.addEventListener("click", () => {
+    const willOpen = !dropdown.classList.contains("open");
+    closeAllDropdowns();
+    setDropdownOpen(dropdown, willOpen);
+  });
+
+  dropdown.addEventListener("click", (event) => {
+    const button = event.target.closest(optionSelector);
+    if (!button) return;
+
+    onChange(button.dataset[dataName]);
+    dropdown.querySelectorAll(optionSelector).forEach((item) => item.classList.toggle("active", item === button));
+    valueText.textContent = button.textContent.trim();
+    setDropdownOpen(dropdown, false);
+    smoothRender();
+  });
+
+  const activeButton = dropdown.querySelector(`${optionSelector}.active`);
+  if (activeButton) valueText.textContent = activeButton.textContent.trim();
+}
+
+function setDropdownOpen(dropdown, open) {
+  dropdown.classList.toggle("open", open);
+  dropdown.querySelector(".dropdown-trigger").setAttribute("aria-expanded", String(open));
+}
+
+function closeAllDropdowns() {
+  document.querySelectorAll(".filter-dropdown.open").forEach((dropdown) => setDropdownOpen(dropdown, false));
 }
 
 async function loadImageChoices() {
