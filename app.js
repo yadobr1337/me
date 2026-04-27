@@ -31,6 +31,7 @@ const grid = document.querySelector("#watchGrid");
 const emptyState = document.querySelector("#emptyState");
 const countText = document.querySelector("#countText");
 const searchInput = document.querySelector("#searchInput");
+const mobileSearchInput = document.querySelector("#mobileSearchInput");
 const sortFilter = document.querySelector("#sortFilter");
 const typeFilter = document.querySelector("#typeFilter");
 const statusFilter = document.querySelector("#statusFilter");
@@ -85,7 +86,15 @@ passwordInput.addEventListener("keydown", (event) => {
 
 document.querySelector("#closeEditor").addEventListener("click", () => editorModal.close());
 
-searchInput.addEventListener("input", render);
+searchInput.addEventListener("input", () => {
+  syncSearchInput(searchInput, mobileSearchInput);
+  render();
+});
+
+mobileSearchInput.addEventListener("input", () => {
+  syncSearchInput(mobileSearchInput, searchInput);
+  render();
+});
 
 setupFilterDropdown(typeFilter, "type", (value) => {
   currentType = value;
@@ -229,6 +238,10 @@ function render() {
 
 function smoothRender() {
   render();
+}
+
+function syncSearchInput(source, target) {
+  if (target.value !== source.value) target.value = source.value;
 }
 
 function setupFilterDropdown(dropdown, dataName, onChange) {
