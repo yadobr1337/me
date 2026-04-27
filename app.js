@@ -1,5 +1,6 @@
 const STORAGE_KEY = "watched-list-v1";
 const DELETED_IDS_KEY = "watched-list-deleted-v1";
+const LOCAL_CHANGES_KEY = "watched-list-local-changes-v1";
 const API_URL = "/api/items";
 const PASSWORD = "101112";
 const typeNames = {
@@ -14,6 +15,7 @@ const statusNames = {
 
 let deletedIds = loadDeletedIds();
 let items = loadItems();
+let hasLocalChanges = loadLocalChangesFlag();
 let currentType = "all";
 let currentStatus = "watched";
 let sortMode = "recent";
@@ -350,6 +352,7 @@ function loadItems() {
 function saveItems(options = {}) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   if (options.skipRemote) return;
+  setLocalChangesPending(true);
   scheduleRemoteSave();
 }
 
@@ -364,6 +367,15 @@ function loadDeletedIds() {
 
 function saveDeletedIds() {
   localStorage.setItem(DELETED_IDS_KEY, JSON.stringify([...deletedIds]));
+}
+
+function loadLocalChangesFlag() {
+  return localStorage.getItem(LOCAL_CHANGES_KEY) === "1";
+}
+
+function setLocalChangesPending(value) {
+  hasLocalChanges = value;
+  localStorage.setItem(LOCAL_CHANGES_KEY, value ? "1" : "0");
 }
 
 function createFallbackPoster(title) {
@@ -554,10 +566,12 @@ async function syncItemsFromServer() {
 
     remoteSyncEnabled = true;
     const remoteItems = normalizeItems(await response.json());
-    const mergedItems = mergeItems(remoteItems, items);
-    const shouldUploadLocalItems = mergedItems.length !== remoteItems.length || remoteItems.some((item) => deletedIds.has(item.id));
+    const nextItems = hasLocalChanges ? mergeItems(remoteItems, items) : removeDeletedItems(remoteItems);
+    const shouldUploadLocalItems = hasLocalChanges
+      ? !itemsAreEqual(nextItems, removeDeletedItems(remoteItems)) || remoteItems.some((item) => deletedIds.has(item.id))
+      : remoteItems.some((item) => deletedIds.has(item.id));
 
-    items = mergedItems;
+    items = nextItems;
     saveItems({ skipRemote: true });
     render();
 
@@ -587,6 +601,7 @@ async function saveItemsToServer() {
     });
 
     if (!response.ok) throw new Error("Remote save failed");
+    setLocalChangesPending(false);
   } catch {
     remoteSyncEnabled = false;
   }
@@ -610,13 +625,21 @@ function normalizeItems(value) {
 
 function mergeItems(remoteItems, localItems) {
   const merged = new Map();
-  normalizeItems(remoteItems).forEach((item) => {
+  removeDeletedItems(remoteItems).forEach((item) => {
     if (!deletedIds.has(item.id)) merged.set(item.id, item);
   });
   normalizeItems(localItems).forEach((item) => {
     if (!deletedIds.has(item.id) && !merged.has(item.id)) merged.set(item.id, item);
   });
   return [...merged.values()].sort((a, b) => b.createdAt - a.createdAt);
+}
+
+function removeDeletedItems(sourceItems) {
+  return normalizeItems(sourceItems).filter((item) => !deletedIds.has(item.id));
+}
+
+function itemsAreEqual(firstItems, secondItems) {
+  return JSON.stringify(normalizeItems(firstItems)) === JSON.stringify(normalizeItems(secondItems));
 }
 
 function escapeSvg(value) {
