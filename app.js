@@ -1,4 +1,5 @@
 const STORAGE_KEY = "watched-list-v1";
+const DELETED_IDS_KEY = "watched-list-deleted-v1";
 const API_URL = "/api/items";
 const PASSWORD = "101112";
 const typeNames = {
@@ -11,6 +12,7 @@ const statusNames = {
   planned: "Запланировано",
 };
 
+let deletedIds = loadDeletedIds();
 let items = loadItems();
 let currentType = "all";
 let currentStatus = "watched";
@@ -139,9 +141,12 @@ deleteSearch.addEventListener("input", updateDeleteTarget);
 deleteButton.addEventListener("click", () => {
   if (!deleteTargetId) return;
   const target = items.find((item) => item.id === deleteTargetId);
+  if (!target) return;
   const confirmed = confirm(`Удалить "${target.title}" из списка?`);
   if (!confirmed) return;
 
+  deletedIds.add(deleteTargetId);
+  saveDeletedIds();
   items = items.filter((item) => item.id !== deleteTargetId);
   saveItems();
   deleteSearch.value = "";
@@ -336,7 +341,7 @@ function loadItems() {
     return storedItems.map((item) => ({
       ...item,
       status: getItemStatus(item),
-    }));
+    })).filter((item) => !deletedIds.has(item.id));
   } catch {
     return [];
   }
@@ -346,6 +351,19 @@ function saveItems(options = {}) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   if (options.skipRemote) return;
   scheduleRemoteSave();
+}
+
+function loadDeletedIds() {
+  try {
+    const storedIds = JSON.parse(localStorage.getItem(DELETED_IDS_KEY)) || [];
+    return new Set(Array.isArray(storedIds) ? storedIds.map(String).filter(Boolean) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveDeletedIds() {
+  localStorage.setItem(DELETED_IDS_KEY, JSON.stringify([...deletedIds]));
 }
 
 function createFallbackPoster(title) {
@@ -537,7 +555,7 @@ async function syncItemsFromServer() {
     remoteSyncEnabled = true;
     const remoteItems = normalizeItems(await response.json());
     const mergedItems = mergeItems(remoteItems, items);
-    const shouldUploadLocalItems = mergedItems.length !== remoteItems.length;
+    const shouldUploadLocalItems = mergedItems.length !== remoteItems.length || remoteItems.some((item) => deletedIds.has(item.id));
 
     items = mergedItems;
     saveItems({ skipRemote: true });
@@ -592,9 +610,11 @@ function normalizeItems(value) {
 
 function mergeItems(remoteItems, localItems) {
   const merged = new Map();
-  normalizeItems(remoteItems).forEach((item) => merged.set(item.id, item));
+  normalizeItems(remoteItems).forEach((item) => {
+    if (!deletedIds.has(item.id)) merged.set(item.id, item);
+  });
   normalizeItems(localItems).forEach((item) => {
-    if (!merged.has(item.id)) merged.set(item.id, item);
+    if (!deletedIds.has(item.id) && !merged.has(item.id)) merged.set(item.id, item);
   });
   return [...merged.values()].sort((a, b) => b.createdAt - a.createdAt);
 }
