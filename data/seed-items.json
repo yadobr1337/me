@@ -1,0 +1,578 @@
+[
+    {
+        "id":  "seed-anime-1",
+        "title":  "Семь Смертных грехов",
+        "rating":  8,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=3cac71bf73c2c97c587071f99f118f5a1691c96f-7744452-images-thumbs\u0026n=13",
+        "createdAt":  1714200063000
+    },
+    {
+        "id":  "seed-anime-2",
+        "title":  "Пластиковые воспоминания",
+        "rating":  10,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=ad30b722b0a206e5946a8831cf20cee06b248aa7-4034369-images-thumbs\u0026n=13",
+        "createdAt":  1714200062000
+    },
+    {
+        "id":  "seed-anime-3",
+        "title":  "Такт опус дестени",
+        "rating":  7,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=22f9703031c5cd44ea80db1889f1dcbc-5234974-images-thumbs\u0026n=13",
+        "createdAt":  1714200061000
+    },
+    {
+        "id":  "seed-anime-4",
+        "title":  "Реинкарнация безработного",
+        "rating":  6,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=55ec4d168e28569534597d8cf9ce8b0c4e5c18ec-5250028-images-thumbs\u0026n=13",
+        "createdAt":  1714200060000
+    },
+    {
+        "id":  "seed-anime-5",
+        "title":  "Атака титанов",
+        "rating":  7,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=cc443891fe83a9aadb43164f0e422cbae6868969-5241497-images-thumbs\u0026n=13",
+        "createdAt":  1714200059000
+    },
+    {
+        "id":  "seed-anime-6",
+        "title":  "Выдающиеся звери",
+        "rating":  2,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=490b8034575befa976c8b6c37a7c1f6935f59149-5354312-images-thumbs\u0026n=13",
+        "createdAt":  1714200058000
+    },
+    {
+        "id":  "seed-anime-7",
+        "title":  "Милый во франксе",
+        "rating":  9,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=f935d388ac51bf32ce6ef35045803a4f0366819f-10966719-images-thumbs\u0026n=13",
+        "createdAt":  1714200057000
+    },
+    {
+        "id":  "seed-anime-8",
+        "title":  "Ре зеро",
+        "rating":  3,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=81c0f48842e478c48635c6435a05e7d73123644e-5108220-images-thumbs\u0026n=13",
+        "createdAt":  1714200056000
+    },
+    {
+        "id":  "seed-anime-9",
+        "title":  "Бездомный бог",
+        "rating":  8,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=878848805b926540599f980ab80a6136dddb215b-4958745-images-thumbs\u0026n=13\u0026w=500\u0026h=520",
+        "createdAt":  1714200055000
+    },
+    {
+        "id":  "seed-anime-10",
+        "title":  "Обещанный неверленд",
+        "rating":  9,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=c812b6152e2eca7e15d385e0948c5ef7ec043a65-5272716-images-thumbs\u0026n=13",
+        "createdAt":  1714200054000
+    },
+    {
+        "id":  "seed-anime-11",
+        "title":  "Детектив уже мёртв",
+        "rating":  6,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=95f482bb79f24d8d4b0a115da6873a81-4485565-images-thumbs\u0026n=13",
+        "createdAt":  1714200053000
+    },
+    {
+        "id":  "seed-anime-12",
+        "title":  "О моём перерождение в слизь",
+        "rating":  6,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=0ae18116c7e97d20bcd0fb69727960d649248ac4-3910357-images-thumbs\u0026n=13",
+        "createdAt":  1714200052000
+    },
+    {
+        "id":  "seed-anime-13",
+        "title":  "Нет игры нет жизни",
+        "rating":  9,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=93b90eabd1e198e6c50d8ce7dec1203b5ebe7823-5333707-images-thumbs\u0026n=13\u0026w=500\u0026h=520",
+        "createdAt":  1714200051000
+    },
+    {
+        "id":  "seed-anime-14",
+        "title":  "Девочка зайка",
+        "rating":  10,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=85838522e19d8d65b05aba6fb94fe0e2d1980400-4445204-images-thumbs\u0026n=13",
+        "createdAt":  1714200050000
+    },
+    {
+        "id":  "seed-anime-15",
+        "title":  "Убица акаме",
+        "rating":  10,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=fb70c2ea75b49d43cc2f8fecf6af9b7b5790f623-5459035-images-thumbs\u0026n=13",
+        "createdAt":  1714200049000
+    },
+    {
+        "id":  "seed-anime-16",
+        "title":  "Арифурэта",
+        "rating":  7,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=d81fd32ba842ae5903e797753a0cd772c9c0326f-3922549-images-thumbs\u0026n=13",
+        "createdAt":  1714200048000
+    },
+    {
+        "id":  "seed-anime-17",
+        "title":  "Дневник будущего",
+        "rating":  6,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=502401f6233c6834ff330bdaa35ed0bd0b9455e8-5350805-images-thumbs\u0026n=13",
+        "createdAt":  1714200047000
+    },
+    {
+        "id":  "seed-anime-18",
+        "title":  "Токийский гуль",
+        "rating":  9,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=d9fc6ad595585aaef81ba3fc0342d3aa393788f9-7054477-images-thumbs\u0026n=13",
+        "createdAt":  1714200046000
+    },
+    {
+        "id":  "seed-anime-19",
+        "title":  "Класс убийц",
+        "rating":  8,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=d0fe1337b4f19412208dff1996a489d97a2021a8-5602191-images-thumbs\u0026n=13",
+        "createdAt":  1714200045000
+    },
+    {
+        "id":  "seed-anime-20",
+        "title":  "Шарлотта",
+        "rating":  8,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=2d9a9d26ea728edb3be45103f5db4806aca67ab9-5451548-images-thumbs\u0026n=13",
+        "createdAt":  1714200044000
+    },
+    {
+        "id":  "seed-anime-21",
+        "title":  "Гуррен Лаганн",
+        "rating":  10,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=11233350096a9e6e19c8cc65a563ffbb41397ebd-5582331-images-thumbs\u0026n=13",
+        "createdAt":  1714200043000
+    },
+    {
+        "id":  "seed-anime-22",
+        "title":  "Школа мертвецов",
+        "rating":  8,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=e2fd14d591acb2ba7626e210e4af6c5a765c09d5-8181450-images-thumbs\u0026n=13",
+        "createdAt":  1714200042000
+    },
+    {
+        "id":  "seed-anime-23",
+        "title":  "Мемуары ванитаса",
+        "rating":  6,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=2021c236735c5867859d6c0e4fe9e7a73bb42450-5446078-images-thumbs\u0026n=13",
+        "createdAt":  1714200041000
+    },
+    {
+        "id":  "seed-anime-24",
+        "title":  "Киберпанк",
+        "rating":  10,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=de9c18fe834c0a91457647372505defec353cb26-5433970-images-thumbs\u0026n=13",
+        "createdAt":  1714200040000
+    },
+    {
+        "id":  "seed-anime-25",
+        "title":  "Поднятие Уровня в Одиночку",
+        "rating":  7,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=c7a4bb931652b6e93dfca59a5be8f3fba65444df-10511592-images-thumbs\u0026n=13",
+        "createdAt":  1714200039000
+    },
+    {
+        "id":  "seed-anime-26",
+        "title":  "Человек бензопила",
+        "rating":  8,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=b3b00d32a91b38aed402313ebb2031cfa682d021-12597404-images-thumbs\u0026n=13",
+        "createdAt":  1714200038000
+    },
+    {
+        "id":  "seed-anime-27",
+        "title":  "Безумный азарт",
+        "rating":  7,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=61e2f1bb43894bf46a5f5ef6226113c08cf8f1f0-5102865-images-thumbs\u0026n=13",
+        "createdAt":  1714200037000
+    },
+    {
+        "id":  "seed-anime-28",
+        "title":  "Непризнанный владыка демонов",
+        "rating":  7,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=6d27e2e0bc36b792cb9afb28eb181c20a63d09ad-4469622-images-thumbs\u0026n=13",
+        "createdAt":  1714200036000
+    },
+    {
+        "id":  "seed-anime-29",
+        "title":  "Аля кокетничает со мной по русски",
+        "rating":  9,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=825462cc2bdb3fc56ec03254a363290d0cc56ae3-4304165-images-thumbs\u0026n=13",
+        "createdAt":  1714200035000
+    },
+    {
+        "id":  "seed-anime-30",
+        "title":  "Рагна багровый",
+        "rating":  6,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=38cb2469b8db486c846eafd84788a454537c9d8e-5859751-images-thumbs\u0026n=13",
+        "createdAt":  1714200034000
+    },
+    {
+        "id":  "seed-anime-31",
+        "title":  "Тетрадь смерти",
+        "rating":  10,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=c2e574bc433282fc49ed410bd96e846e25457e0a-9211526-images-thumbs\u0026n=13",
+        "createdAt":  1714200033000
+    },
+    {
+        "id":  "seed-anime-32",
+        "title":  "Иная",
+        "rating":  9,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=929ac3227b199abd0eeaa339fa7a74a78110ceb0-4078231-images-thumbs\u0026n=13",
+        "createdAt":  1714200032000
+    },
+    {
+        "id":  "seed-anime-33",
+        "title":  "летнее время",
+        "rating":  10,
+        "type":  "anime",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=57bb0862002601a762ad8908bb322b2d4f16bdc8-13094487-images-thumbs\u0026n=13",
+        "createdAt":  1714200031000
+    },
+    {
+        "id":  "seed-movie-34",
+        "title":  "интерстеллар",
+        "rating":  10,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=0d8d9a80fe9732711f9a282f9588f4c0e78e86df-5464818-images-thumbs\u0026n=13",
+        "createdAt":  1714200030000
+    },
+    {
+        "id":  "seed-movie-35",
+        "title":  "остров проклятых",
+        "rating":  10,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=39522ad216bb7141be63b4ef4608ab7daa592841-5293830-images-thumbs\u0026n=13",
+        "createdAt":  1714200029000
+    },
+    {
+        "id":  "seed-movie-36",
+        "title":  "бойцовский клуб",
+        "rating":  10,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=debbc9a0e5217e445fdfb0b823d7ec829d9f5514-4080060-images-thumbs\u0026n=13",
+        "createdAt":  1714200028000
+    },
+    {
+        "id":  "seed-movie-37",
+        "title":  "волк с уолл стрит",
+        "rating":  8,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=31fdf1bb9ce8554ff2be4e4a498c69102e83b492-4291611-images-thumbs\u0026n=13",
+        "createdAt":  1714200027000
+    },
+    {
+        "id":  "seed-movie-38",
+        "title":  "властелин колец(все части)",
+        "rating":  7,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=032c8bb4b42d95e968f8f976b0565774c9dbb82e-10727636-images-thumbs\u0026n=13",
+        "createdAt":  1714200026000
+    },
+    {
+        "id":  "seed-movie-39",
+        "title":  "Сайлент Хилл (все части)",
+        "rating":  10,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=9d3eb3d5705e9e34f6fbed57e69822b4053354e8-5316879-images-thumbs\u0026n=13",
+        "createdAt":  1714200025000
+    },
+    {
+        "id":  "seed-movie-40",
+        "title":  "Бесславные ублюдки",
+        "rating":  10,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=a47f1f18fb18e288cfcf7184121da6e44f51b9d4-7854793-images-thumbs\u0026n=13",
+        "createdAt":  1714200024000
+    },
+    {
+        "id":  "seed-movie-41",
+        "title":  "Экипаж",
+        "rating":  7,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=fa67bb0dfdb1a48e752fd2de6572c95839179d15-5429047-images-thumbs\u0026n=13",
+        "createdAt":  1714200023000
+    },
+    {
+        "id":  "seed-movie-42",
+        "title":  "Бегущий в лабиринте(все части)",
+        "rating":  8,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=10874756241fbfb6e412fe82940a9722240d32f3-10036219-images-thumbs\u0026n=13",
+        "createdAt":  1714200022000
+    },
+    {
+        "id":  "seed-movie-43",
+        "title":  "Безумный макс дорога ярости",
+        "rating":  6,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=b1979b1a2e87cd293dae3155d0b837cee33001c4-12884984-images-thumbs\u0026n=13",
+        "createdAt":  1714200021000
+    },
+    {
+        "id":  "seed-movie-44",
+        "title":  "Джокер",
+        "rating":  7,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=dc10afb1247a46808a5f6fd6b9f3f48ec3720f0b-5326406-images-thumbs\u0026n=13",
+        "createdAt":  1714200020000
+    },
+    {
+        "id":  "seed-movie-45",
+        "title":  "Достать ножи(все части)",
+        "rating":  8,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=8c455eee6a80e811da9e7b0f6b0dad79d192bdac-5478998-images-thumbs\u0026n=13",
+        "createdAt":  1714200019000
+    },
+    {
+        "id":  "seed-movie-46",
+        "title":  "семь",
+        "rating":  8,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=ab48c0c8fb40a529bfffc0c900ea82fbc1fa1d26-12469033-images-thumbs\u0026n=13",
+        "createdAt":  1714200018000
+    },
+    {
+        "id":  "seed-movie-47",
+        "title":  "огонь (2020)",
+        "rating":  6,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=627221ec3c026c04b6b6243a86789d3f682ae4d0-5231675-images-thumbs\u0026n=13",
+        "createdAt":  1714200017000
+    },
+    {
+        "id":  "seed-movie-48",
+        "title":  "Оппенгеймер",
+        "rating":  6,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=5beb2a6592b9e3febad69c60fcd1d0c68d4cf97f-12345400-images-thumbs\u0026n=13",
+        "createdAt":  1714200016000
+    },
+    {
+        "id":  "seed-movie-49",
+        "title":  "Шоу Трумана",
+        "rating":  5,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=d5a3d2b7af81234d0687da259b2fc30faf70915b-3343247-images-thumbs\u0026n=13",
+        "createdAt":  1714200015000
+    },
+    {
+        "id":  "seed-movie-50",
+        "title":  "Пила",
+        "rating":  4,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=d0a6dda4648a36a9732ae5caa83c6c43145de2a3-4570949-images-thumbs\u0026n=13\u0026w=500\u0026h=520",
+        "createdAt":  1714200014000
+    },
+    {
+        "id":  "seed-movie-51",
+        "title":  "Аватар",
+        "rating":  9,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=95f70a3b8892f644f162131ca84a98118e7a7bcd-4593053-images-thumbs\u0026n=13",
+        "createdAt":  1714200013000
+    },
+    {
+        "id":  "seed-movie-52",
+        "title":  "Терминатор(все части)",
+        "rating":  7,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=ac091b42d604c64cc3f3442603f90ee5ef4cd5b8-9181118-images-thumbs\u0026n=13",
+        "createdAt":  1714200012000
+    },
+    {
+        "id":  "seed-movie-53",
+        "title":  "Дюна (все части)",
+        "rating":  8,
+        "type":  "movie",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=d58d2dfcaf4a4bc45fcc70ba3f5e56c6944d51ff-12938662-images-thumbs\u0026n=13",
+        "createdAt":  1714200011000
+    },
+    {
+        "id":  "seed-series-54",
+        "title":  "Бумажный дом",
+        "rating":  10,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=70a9fbee0eeaa13ac13128ec8f061343eb137982-5210051-images-thumbs\u0026n=13",
+        "createdAt":  1714200010000
+    },
+    {
+        "id":  "seed-series-55",
+        "title":  "Извне",
+        "rating":  6,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=6bd9a684d2be40cbfb16233b3b7d6db8431f67d1-16489453-images-thumbs\u0026n=13",
+        "createdAt":  1714200009000
+    },
+    {
+        "id":  "seed-series-56",
+        "title":  "Алиса в зазеркалье",
+        "rating":  8,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=e155dbffcfcc453e539e75b525c2b251de727349-10513429-images-thumbs\u0026n=13",
+        "createdAt":  1714200008000
+    },
+    {
+        "id":  "seed-series-57",
+        "title":  "Ходячие Мертвецы",
+        "rating":  9,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=47f476cc92db0979785ff6bdb042ba9350f72e3d-8386641-images-thumbs\u0026n=13\u0026w=500\u0026h=520",
+        "createdAt":  1714200007000
+    },
+    {
+        "id":  "seed-series-58",
+        "title":  "Тьма",
+        "rating":  5,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=eb7655a4fd37457525fd7a5ba88aae10c7db583f-5232270-images-thumbs\u0026n=13",
+        "createdAt":  1714200006000
+    },
+    {
+        "id":  "seed-series-59",
+        "title":  "Очень странные дела",
+        "rating":  8,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=b2faba2b6bd008ce72c7285a854c8730a2ca3817-4575484-images-thumbs\u0026n=13",
+        "createdAt":  1714200005000
+    },
+    {
+        "id":  "seed-series-60",
+        "title":  "Уэнздей",
+        "rating":  9,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=09c4d243d5316879aaf715a1955fa073d781347d-5283698-images-thumbs\u0026n=13",
+        "createdAt":  1714200004000
+    },
+    {
+        "id":  "seed-series-61",
+        "title":  "Декстер",
+        "rating":  7,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=73e0ef77e211b8b979d77f776faf9857c1883217-5859023-images-thumbs\u0026n=13",
+        "createdAt":  1714200003000
+    },
+    {
+        "id":  "seed-series-62",
+        "title":  "Шерлок Хоумс",
+        "rating":  10,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=7a1b2240b73b520b93af857a9f57cc9c17df754c-5233043-images-thumbs\u0026n=13\u0026w=500\u0026h=520",
+        "createdAt":  1714200002000
+    },
+    {
+        "id":  "seed-series-63",
+        "title":  "Ты",
+        "rating":  6,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=933f0b7ee7409b7de0456d3ceda0eadfb8c2cfa0-12399165-images-thumbs\u0026n=13",
+        "createdAt":  1714200001000
+    },
+    {
+        "id":  "seed-series-64",
+        "title":  "Бункер(от apple)",
+        "rating":  4,
+        "type":  "series",
+        "status":  "watched",
+        "poster":  "https://avatars.mds.yandex.net/i?id=01058bdb88cd9525af52d12fb55296c16cec12fe-10879920-images-thumbs\u0026n=13",
+        "createdAt":  1714200000000
+    }
+]
