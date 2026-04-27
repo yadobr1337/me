@@ -5,9 +5,14 @@ const typeNames = {
   series: "Сериал",
   anime: "Аниме",
 };
+const statusNames = {
+  watched: "Просмотрено",
+  planned: "Запланировано",
+};
 
 let items = loadItems();
 let currentType = "all";
+let currentStatus = "all";
 let sortMode = "recent";
 let selectedImage = "";
 let deleteTargetId = null;
@@ -18,6 +23,7 @@ const countText = document.querySelector("#countText");
 const searchInput = document.querySelector("#searchInput");
 const sortFilter = document.querySelector("#sortFilter");
 const typeFilter = document.querySelector("#typeFilter");
+const statusFilter = document.querySelector("#statusFilter");
 const passwordModal = document.querySelector("#passwordModal");
 const editorModal = document.querySelector("#editorModal");
 const passwordInput = document.querySelector("#passwordInput");
@@ -27,6 +33,7 @@ const titleInput = document.querySelector("#titleInput");
 const ratingInput = document.querySelector("#ratingInput");
 const ratingValue = document.querySelector("#ratingValue");
 const categoryInput = document.querySelector("#categoryInput");
+const statusInput = document.querySelector("#statusInput");
 const imageResults = document.querySelector("#imageResults");
 const manualImage = document.querySelector("#manualImage");
 const deleteSearch = document.querySelector("#deleteSearch");
@@ -34,7 +41,7 @@ const deleteButton = document.querySelector("#deleteButton");
 const deleteHint = document.querySelector("#deleteHint");
 const deleteResults = document.querySelector("#deleteResults");
 
-createParticleField();
+scheduleBackgroundEffects();
 
 document.querySelector("#openAdd").addEventListener("click", () => {
   passwordInput.value = "";
@@ -74,6 +81,14 @@ typeFilter.addEventListener("click", (event) => {
   smoothRender();
 });
 
+statusFilter.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-status]");
+  if (!button) return;
+  currentStatus = button.dataset.status;
+  statusFilter.querySelectorAll("button").forEach((item) => item.classList.toggle("active", item === button));
+  smoothRender();
+});
+
 ratingInput.addEventListener("input", () => {
   ratingValue.textContent = ratingInput.value;
 });
@@ -95,6 +110,7 @@ addForm.addEventListener("submit", (event) => {
     title,
     rating: Number(ratingInput.value),
     type: categoryInput.value,
+    status: statusInput.value,
     poster,
     createdAt: Date.now(),
   });
@@ -137,6 +153,7 @@ function render() {
   const query = searchInput.value.trim().toLowerCase();
   const sorted = [...items]
     .filter((item) => currentType === "all" || item.type === currentType)
+    .filter((item) => currentStatus === "all" || getItemStatus(item) === currentStatus)
     .filter((item) => item.title.toLowerCase().includes(query))
     .sort((a, b) => {
       if (sortMode === "rating") return b.rating - a.rating || b.createdAt - a.createdAt;
@@ -149,19 +166,21 @@ function render() {
       const isTopRated = item.rating > 8;
       const typeIcon = item.type === "movie" ? "film" : "tv";
       const viewName = createViewName(item.id);
+      const status = getItemStatus(item);
       return `
         <a class="card ${isTopRated ? "top-rated" : ""}" href="${searchUrl}" target="_blank" rel="noopener noreferrer" style="--delay: ${index * 45}ms; view-transition-name: ${viewName}" aria-label="Открыть поиск Яндекса: ${escapeAttribute(item.title)}">
           <div class="poster-wrap">
-            <img class="poster" src="${escapeAttribute(item.poster)}" alt="${escapeAttribute(item.title)}" loading="lazy" />
+            <img class="poster" src="${escapeAttribute(item.poster)}" alt="${escapeAttribute(item.title)}" loading="lazy" decoding="async" />
             <span class="poster-overlay"></span>
             <span class="poster-type">${typeNames[item.type]}</span>
+            <span class="poster-status">${statusNames[status]}</span>
           </div>
           <div class="card-body">
             <h3 class="card-title">${escapeHtml(item.title)}</h3>
             ${isTopRated ? `<span class="top-line" aria-hidden="true"></span>` : ""}
             <div class="meta-row">
               <span class="rating">${iconSvg("star", 18, "star-icon")}<span>${item.rating}/10</span></span>
-              <span class="media-icon">${iconSvg(typeIcon, 22)}</span>
+              <span class="media-icon" title="${statusNames[status]}">${iconSvg(typeIcon, 22)}</span>
             </div>
           </div>
         </a>
@@ -174,7 +193,8 @@ function render() {
 }
 
 function smoothRender() {
-  if (!document.startViewTransition) {
+  const shouldSkipTransition = window.matchMedia("(max-width: 560px)").matches || items.length > 30;
+  if (!document.startViewTransition || shouldSkipTransition) {
     render();
     return;
   }
@@ -207,7 +227,7 @@ async function loadImageChoices() {
       .map(
         (url, index) => `
           <div class="image-choice">
-            <img src="${escapeAttribute(url)}" alt="Вариант обложки ${index + 1}" />
+            <img src="${escapeAttribute(url)}" alt="Вариант обложки ${index + 1}" loading="lazy" decoding="async" />
             <button type="button" data-url="${escapeAttribute(url)}" aria-label="Выбрать обложку ${index + 1}"></button>
           </div>
         `,
@@ -265,7 +285,7 @@ function updateDeleteTarget() {
     .map(
       (item) => `
         <button class="delete-result" type="button" data-id="${escapeAttribute(item.id)}">
-          <img src="${escapeAttribute(item.poster)}" alt="" loading="lazy" />
+          <img src="${escapeAttribute(item.poster)}" alt="" loading="lazy" decoding="async" />
           <span>${escapeHtml(item.title)}</span>
           <strong>${item.rating}/10</strong>
         </button>
@@ -299,7 +319,11 @@ function resetForm() {
 
 function loadItems() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    const storedItems = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    return storedItems.map((item) => ({
+      ...item,
+      status: getItemStatus(item),
+    }));
   } catch {
     return [];
   }
@@ -347,7 +371,8 @@ function createParticleField() {
   const field = document.querySelector("#particleField");
   if (!field || field.children.length > 0) return;
 
-  const particles = Array.from({ length: 22 }, (_, index) => ({
+  const isSmallScreen = window.matchMedia("(max-width: 560px)").matches;
+  const particles = Array.from({ length: isSmallScreen ? 8 : 14 }, (_, index) => ({
     left: `${(index * 37) % 100}%`,
     top: `${-18 + ((index * 19) % 38)}%`,
     size: 1 + (index % 3),
@@ -372,6 +397,21 @@ function createParticleField() {
   });
 
   field.appendChild(fragment);
+}
+
+function scheduleBackgroundEffects() {
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(createParticleField, { timeout: 1200 });
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    setTimeout(createParticleField, 120);
+  });
+}
+
+function getItemStatus(item) {
+  return item.status === "planned" ? "planned" : "watched";
 }
 
 function iconSvg(name, size = 22, className = "") {

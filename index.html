@@ -83,6 +83,15 @@
             <button type="button" data-sort="rating">Рейтинг</button>
           </div>
         </div>
+
+        <div class="control-group status-field">
+          <span>Статус</span>
+          <div class="status-options" id="statusFilter">
+            <button class="active" type="button" data-status="all">Все</button>
+            <button type="button" data-status="watched">Просмотрено</button>
+            <button type="button" data-status="planned">Запланировано</button>
+          </div>
+        </div>
       </section>
 
       <section>
@@ -141,6 +150,14 @@
             <option value="movie">Фильм</option>
             <option value="series">Сериал</option>
             <option value="anime">Аниме</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Статус</span>
+          <select id="statusInput">
+            <option value="watched">Просмотрено</option>
+            <option value="planned">Запланировано</option>
           </select>
         </label>
 
