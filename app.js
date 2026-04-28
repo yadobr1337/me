@@ -12,6 +12,11 @@ const statusNames = {
   watched: "Просмотрено",
   planned: "Запланировано",
 };
+const imageSearchCategoryNames = {
+  movie: "фильм",
+  series: "сериал",
+  anime: "аниме",
+};
 
 let deletedIds = loadDeletedIds();
 let items = loadItems();
@@ -20,7 +25,9 @@ let currentType = "all";
 let currentStatus = "watched";
 let sortMode = "recent";
 let selectedImage = "";
+let selectedEditImage = "";
 let deleteTargetId = null;
+let editTargetId = null;
 let posterLoadRunId = 0;
 let posterObserver = null;
 let pageIsLoaded = document.readyState === "complete";
@@ -45,12 +52,27 @@ const passwordInput = document.querySelector("#passwordInput");
 const passwordError = document.querySelector("#passwordError");
 const addForm = document.querySelector("#addForm");
 const titleInput = document.querySelector("#titleInput");
+const ratingField = document.querySelector("#ratingField");
 const ratingInput = document.querySelector("#ratingInput");
 const ratingValue = document.querySelector("#ratingValue");
+const ratingSuffix = document.querySelector("#ratingSuffix");
 const categoryInput = document.querySelector("#categoryInput");
 const statusInput = document.querySelector("#statusInput");
 const imageResults = document.querySelector("#imageResults");
 const manualImage = document.querySelector("#manualImage");
+const editSearch = document.querySelector("#editSearch");
+const editResults = document.querySelector("#editResults");
+const editHint = document.querySelector("#editHint");
+const editFields = document.querySelector("#editFields");
+const editTitle = document.querySelector("#editTitle");
+const editRatingField = document.querySelector("#editRatingField");
+const editRatingInput = document.querySelector("#editRatingInput");
+const editRatingValue = document.querySelector("#editRatingValue");
+const editRatingSuffix = document.querySelector("#editRatingSuffix");
+const editLoadImages = document.querySelector("#editLoadImages");
+const editImageResults = document.querySelector("#editImageResults");
+const editManualImage = document.querySelector("#editManualImage");
+const editSaveButton = document.querySelector("#editSaveButton");
 const deleteSearch = document.querySelector("#deleteSearch");
 const deleteButton = document.querySelector("#deleteButton");
 const deleteHint = document.querySelector("#deleteHint");
@@ -130,12 +152,24 @@ filterBackdrop.addEventListener("click", () => setFilterSheetOpen(false));
 ratingInput.addEventListener("input", () => {
   ratingValue.textContent = ratingInput.value;
 });
+statusInput.addEventListener("change", updateAddRatingAvailability);
 
-document.querySelector("#loadImages").addEventListener("click", loadImageChoices);
+document.querySelector("#loadImages").addEventListener("click", loadAddImageChoices);
 manualImage.addEventListener("input", () => {
   selectedImage = manualImage.value.trim();
   imageResults.querySelectorAll(".image-choice").forEach((choice) => choice.classList.remove("selected"));
 });
+
+editSearch.addEventListener("input", updateEditTarget);
+editRatingInput.addEventListener("input", () => {
+  editRatingValue.textContent = editRatingInput.value;
+});
+editLoadImages.addEventListener("click", loadEditImageChoices);
+editManualImage.addEventListener("input", () => {
+  selectedEditImage = editManualImage.value.trim();
+  editImageResults.querySelectorAll(".image-choice").forEach((choice) => choice.classList.remove("selected"));
+});
+editSaveButton.addEventListener("click", saveEditedItem);
 
 addForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -146,7 +180,7 @@ addForm.addEventListener("submit", (event) => {
   items.unshift({
     id: createId(),
     title,
-    rating: Number(ratingInput.value),
+    rating: getRatingForStatus(statusInput.value, ratingInput.value),
     type: categoryInput.value,
     status: statusInput.value,
     poster,
@@ -198,14 +232,15 @@ function render() {
     .filter((item) => currentStatus === "all" || getItemStatus(item) === currentStatus)
     .filter((item) => item.title.toLowerCase().includes(query))
     .sort((a, b) => {
-      if (sortMode === "rating") return b.rating - a.rating || b.createdAt - a.createdAt;
+      if (sortMode === "rating") return getSortableRating(b) - getSortableRating(a) || b.createdAt - a.createdAt;
       return b.createdAt - a.createdAt;
     });
 
   grid.innerHTML = sorted
     .map((item, index) => {
       const searchUrl = `https://ya.ru/search/?text=${encodeURIComponent(item.title)}`;
-      const isTopRated = item.rating > 8;
+      const rating = normalizeRating(item.rating);
+      const isTopRated = rating > 8;
       const typeIcon = item.type === "movie" ? "film" : "tv";
       const viewName = createViewName(item.id);
       const status = getItemStatus(item);
@@ -222,7 +257,7 @@ function render() {
             <h3 class="card-title">${escapeHtml(item.title)}</h3>
             ${isTopRated ? `<span class="top-line" aria-hidden="true"></span>` : ""}
             <div class="meta-row">
-              <span class="rating">${iconSvg("star", 18, "star-icon")}<span>${item.rating}/10</span></span>
+              <span class="rating ${rating === null ? "no-rating" : ""}">${iconSvg("star", 18, "star-icon")}<span>${formatRatingText(item)}</span></span>
               <span class="media-icon" title="${statusNames[status]}">${iconSvg(typeIcon, 22)}</span>
             </div>
           </div>
@@ -286,47 +321,92 @@ function setFilterSheetOpen(open) {
   if (!open) closeAllDropdowns();
 }
 
-async function loadImageChoices() {
+function updateAddRatingAvailability() {
+  const disabled = statusInput.value === "planned";
+  ratingInput.disabled = disabled;
+  ratingField.classList.toggle("disabled", disabled);
+  ratingSuffix.hidden = disabled;
+  ratingValue.textContent = disabled ? "после просмотра" : ratingInput.value;
+}
+
+async function loadAddImageChoices() {
   const title = titleInput.value.trim();
   if (!title) {
-    showImageMessage("Сначала введите название.");
+    showImageMessage("Сначала введите название.", imageResults);
     titleInput.focus();
     return;
   }
 
-  showImageMessage("Ищу изображения...");
+  showImageMessage("Ищу изображения...", imageResults);
   selectedImage = "";
 
   try {
-    const urls = await searchYandexImages(title);
+    const urls = await searchYandexImages(createImageSearchQuery(categoryInput.value, title));
     if (urls.length === 0) {
-      showImageMessage("Не получилось найти фото. Можно вставить ссылку вручную ниже.");
+      showImageMessage("Не получилось найти фото. Можно вставить ссылку вручную ниже.", imageResults);
       return;
     }
 
-    imageResults.innerHTML = urls
-      .slice(0, 3)
-      .map(
-        (url, index) => `
-          <div class="image-choice">
-            <img src="${escapeAttribute(url)}" alt="Вариант обложки ${index + 1}" loading="lazy" decoding="async" />
-            <button type="button" data-url="${escapeAttribute(url)}" aria-label="Выбрать обложку ${index + 1}"></button>
-          </div>
-        `,
-      )
-      .join("");
-
-    imageResults.querySelectorAll("button[data-url]").forEach((button) => {
-      button.addEventListener("click", () => {
-        selectedImage = button.dataset.url;
-        manualImage.value = selectedImage;
-        imageResults.querySelectorAll(".image-choice").forEach((choice) => choice.classList.remove("selected"));
-        button.parentElement.classList.add("selected");
-      });
+    renderImageChoices(urls, imageResults, manualImage, (url) => {
+      selectedImage = url;
     });
   } catch (error) {
-    showImageMessage("Поиск временно недоступен. Вставьте ссылку на фото вручную.");
+    showImageMessage("Поиск временно недоступен. Вставьте ссылку на фото вручную.", imageResults);
   }
+}
+
+async function loadEditImageChoices() {
+  const target = getEditTarget();
+  const title = editTitle.value.trim();
+  if (!target || !title) {
+    showImageMessage("Сначала выберите запись и введите название.", editImageResults);
+    return;
+  }
+
+  showImageMessage("Ищу изображения...", editImageResults);
+  selectedEditImage = "";
+
+  try {
+    const urls = await searchYandexImages(createImageSearchQuery(target.type, title));
+    if (urls.length === 0) {
+      showImageMessage("Не получилось найти фото. Можно вставить ссылку вручную ниже.", editImageResults);
+      return;
+    }
+
+    renderImageChoices(urls, editImageResults, editManualImage, (url) => {
+      selectedEditImage = url;
+    });
+  } catch (error) {
+    showImageMessage("Поиск временно недоступен. Вставьте ссылку на фото вручную.", editImageResults);
+  }
+}
+
+function renderImageChoices(urls, target, manualInput, onSelect) {
+  target.innerHTML = urls
+    .slice(0, 3)
+    .map(
+      (url, index) => `
+        <div class="image-choice">
+          <img src="${escapeAttribute(url)}" alt="Вариант обложки ${index + 1}" loading="lazy" decoding="async" />
+          <button type="button" data-url="${escapeAttribute(url)}" aria-label="Выбрать обложку ${index + 1}"></button>
+        </div>
+      `,
+    )
+    .join("");
+
+  target.querySelectorAll("button[data-url]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const url = button.dataset.url;
+      onSelect(url);
+      manualInput.value = url;
+      target.querySelectorAll(".image-choice").forEach((choice) => choice.classList.remove("selected"));
+      button.parentElement.classList.add("selected");
+    });
+  });
+}
+
+function createImageSearchQuery(type, title) {
+  return `${imageSearchCategoryNames[type] || ""} ${title} постер`.trim();
 }
 
 async function searchYandexImages(query) {
@@ -344,8 +424,108 @@ async function searchYandexImages(query) {
   return [...new Set(matches.map((match) => match[1].replace(/&amp;/g, "&")))];
 }
 
-function showImageMessage(text) {
-  imageResults.innerHTML = `<div class="image-message">${escapeHtml(text)}</div>`;
+function showImageMessage(text, target = imageResults) {
+  target.innerHTML = `<div class="image-message">${escapeHtml(text)}</div>`;
+}
+
+function updateEditTarget() {
+  const query = editSearch.value.trim().toLowerCase();
+  editTargetId = null;
+  selectedEditImage = "";
+  editResults.innerHTML = "";
+  editFields.hidden = true;
+
+  if (!query) {
+    editHint.textContent = "Начните вводить название записи.";
+    return;
+  }
+
+  const matches = items.filter((item) => item.title.toLowerCase().includes(query)).slice(0, 6);
+  if (matches.length === 0) {
+    editHint.textContent = "Ничего не найдено.";
+    return;
+  }
+
+  editHint.textContent = "Выберите запись для изменения.";
+  editResults.innerHTML = matches.map(renderListActionButton).join("");
+
+  editResults.querySelectorAll(".delete-result").forEach((button) => {
+    button.addEventListener("click", () => selectEditTarget(button.dataset.id));
+  });
+}
+
+function selectEditTarget(id) {
+  const target = items.find((item) => item.id === id);
+  if (!target) return;
+
+  editTargetId = id;
+  selectedEditImage = "";
+  editResults.querySelectorAll(".delete-result").forEach((item) => item.classList.toggle("selected", item.dataset.id === id));
+  editFields.hidden = false;
+  editTitle.value = target.title;
+  editManualImage.value = target.poster || "";
+  editImageResults.innerHTML = target.poster
+    ? `
+      <div class="image-choice selected">
+        <img src="${escapeAttribute(target.poster)}" alt="${escapeAttribute(target.title)}" loading="lazy" decoding="async" />
+      </div>
+    `
+    : `<div class="image-message">Фото пока не выбрано.</div>`;
+
+  const rating = normalizeRating(target.rating) || 8;
+  editRatingInput.value = String(rating);
+  editRatingValue.textContent = String(rating);
+  updateEditRatingAvailability();
+  editHint.textContent = `Редактируется: ${target.title}`;
+}
+
+function updateEditRatingAvailability() {
+  const target = getEditTarget();
+  const disabled = !target || getItemStatus(target) === "planned";
+  editRatingInput.disabled = disabled;
+  editRatingField.classList.toggle("disabled", disabled);
+  editRatingSuffix.hidden = disabled;
+  editRatingValue.textContent = disabled ? "после просмотра" : editRatingInput.value;
+}
+
+function saveEditedItem() {
+  const target = getEditTarget();
+  const title = editTitle.value.trim();
+  if (!target || !title) return;
+
+  const savedId = editTargetId;
+  const poster = selectedEditImage || editManualImage.value.trim() || target.poster || createFallbackPoster(title);
+  items = items.map((item) => {
+    if (item.id !== savedId) return item;
+    return {
+      ...item,
+      title,
+      rating: getRatingForStatus(getItemStatus(item), editRatingInput.value),
+      poster,
+    };
+  });
+
+  saveItems();
+  render();
+  editSearch.value = title;
+  updateEditTarget();
+  selectEditTarget(savedId);
+  updateDeleteTarget();
+  editHint.textContent = `Сохранено: ${title}`;
+}
+
+function getEditTarget() {
+  return items.find((item) => item.id === editTargetId) || null;
+}
+
+function renderListActionButton(item) {
+  return `
+    <button class="delete-result" type="button" data-id="${escapeAttribute(item.id)}">
+      <img src="${escapeAttribute(item.poster)}" alt="" loading="lazy" decoding="async" />
+      <span>${escapeHtml(item.title)}</span>
+      <strong>${formatRatingText(item)}</strong>
+    </button>
+  `;
 }
 
 function updateDeleteTarget() {
@@ -367,17 +547,7 @@ function updateDeleteTarget() {
   }
 
   deleteHint.textContent = "Выберите запись из списка.";
-  deleteResults.innerHTML = matches
-    .map(
-      (item) => `
-        <button class="delete-result" type="button" data-id="${escapeAttribute(item.id)}">
-          <img src="${escapeAttribute(item.poster)}" alt="" loading="lazy" decoding="async" />
-          <span>${escapeHtml(item.title)}</span>
-          <strong>${item.rating}/10</strong>
-        </button>
-      `,
-    )
-    .join("");
+  deleteResults.innerHTML = matches.map(renderListActionButton).join("");
 
   deleteResults.querySelectorAll(".delete-result").forEach((button) => {
     button.addEventListener("click", () => {
@@ -394,7 +564,22 @@ function resetForm() {
   addForm.reset();
   ratingInput.value = "8";
   ratingValue.textContent = "8";
+  ratingSuffix.hidden = false;
+  updateAddRatingAvailability();
   selectedImage = "";
+  selectedEditImage = "";
+  editTargetId = null;
+  editSearch.value = "";
+  editResults.innerHTML = "";
+  editFields.hidden = true;
+  editHint.textContent = "Начните вводить название записи.";
+  editTitle.value = "";
+  editRatingInput.value = "8";
+  editRatingValue.textContent = "8";
+  editRatingSuffix.hidden = false;
+  editManualImage.value = "";
+  editImageResults.innerHTML = "";
+  updateEditRatingAvailability();
   deleteTargetId = null;
   deleteSearch.value = "";
   deleteResults.innerHTML = "";
@@ -409,6 +594,7 @@ function loadItems() {
     return storedItems.map((item) => ({
       ...item,
       status: getItemStatus(item),
+      rating: getItemStatus(item) === "planned" ? null : normalizeRating(item.rating) || 8,
     })).filter((item) => !deletedIds.has(item.id));
   } catch {
     return [];
@@ -465,6 +651,26 @@ function createPosterPlaceholder(title) {
 function createId() {
   if (crypto.randomUUID) return crypto.randomUUID();
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function getRatingForStatus(status, value) {
+  return status === "planned" ? null : normalizeRating(value) || 8;
+}
+
+function normalizeRating(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const rating = Number(value);
+  if (!Number.isInteger(rating) || rating < 1 || rating > 10) return null;
+  return rating;
+}
+
+function getSortableRating(item) {
+  return normalizeRating(item.rating) || 0;
+}
+
+function formatRatingText(item) {
+  const rating = normalizeRating(item.rating);
+  return rating === null ? "Без рейтинга" : `${rating}/10`;
 }
 
 function createViewName(id) {
@@ -681,7 +887,7 @@ function normalizeItems(value) {
     .map((item) => ({
       id: item.id || createId(),
       title: item.title.trim(),
-      rating: Number.isInteger(Number(item.rating)) ? Math.min(10, Math.max(1, Number(item.rating))) : 8,
+      rating: getItemStatus(item) === "planned" ? null : normalizeRating(item.rating) || 8,
       type: typeNames[item.type] ? item.type : "movie",
       status: getItemStatus(item),
       poster: typeof item.poster === "string" && item.poster ? item.poster : createFallbackPoster(item.title),

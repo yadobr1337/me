@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ProsmotriByDobr1</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260427-blackhole" />
-    <link rel="stylesheet" href="styles.css?v=20260427-mobilesearch" />
+    <link rel="stylesheet" href="styles.css?v=20260428-editplanned" />
   </head>
   <body>
     <div class="space-bg" aria-hidden="true">
@@ -208,9 +208,10 @@
           <input id="titleInput" type="text" placeholder="Например: Наруто" required autocomplete="off" />
         </label>
 
-        <label>
-          <span>Рейтинг: <strong id="ratingValue">8</strong>/10</span>
+        <label class="rating-field" id="ratingField">
+          <span id="ratingLabel">Рейтинг: <strong id="ratingValue">8</strong><span id="ratingSuffix">/10</span></span>
           <input id="ratingInput" type="range" min="1" max="10" step="1" value="8" />
+          <small class="field-note" id="ratingHint">Для запланированного рейтинг появится после просмотра.</small>
         </label>
 
         <label>
@@ -247,6 +248,45 @@
 
         <button class="primary-button" type="submit">Сохранить</button>
 
+        <div class="edit-box">
+          <h3>Изменить запись</h3>
+          <div class="delete-row">
+            <input id="editSearch" type="search" placeholder="Найти запись для изменения" autocomplete="off" />
+          </div>
+          <div class="delete-results" id="editResults"></div>
+          <p id="editHint">Начните вводить название записи.</p>
+
+          <div class="edit-fields" id="editFields" hidden>
+            <label>
+              <span>Новое название</span>
+              <input id="editTitle" type="text" placeholder="Название" autocomplete="off" />
+            </label>
+
+            <label class="rating-field" id="editRatingField">
+              <span id="editRatingLabel">Рейтинг: <strong id="editRatingValue">8</strong><span id="editRatingSuffix">/10</span></span>
+              <input id="editRatingInput" type="range" min="1" max="10" step="1" value="8" />
+              <small class="field-note">Для запланированного рейтинг недоступен.</small>
+            </label>
+
+            <div class="image-tools">
+              <div>
+                <span class="field-title">Новое фото</span>
+                <p>Поиск фото использует тип записи: аниме, фильм или сериал.</p>
+              </div>
+              <button class="secondary-button" id="editLoadImages" type="button">Найти фото</button>
+            </div>
+
+            <div class="image-grid" id="editImageResults" aria-live="polite"></div>
+
+            <label>
+              <span>Своя ссылка на фото</span>
+              <input id="editManualImage" type="url" placeholder="https://..." autocomplete="off" />
+            </label>
+
+            <button class="secondary-button" id="editSaveButton" type="button">Сохранить изменения</button>
+          </div>
+        </div>
+
         <div class="delete-box">
           <h3>Удалить из списка</h3>
           <div class="delete-row">
@@ -259,6 +299,6 @@
       </form>
     </dialog>
 
-    <script src="app.js?v=20260427-mobilesearch"></script>
+    <script src="app.js?v=20260428-editplanned"></script>
   </body>
 </html>
